@@ -4,32 +4,47 @@ import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "FootBallMatch")
+@Table(name = "foot_ball_match")
 public class FootBallMatch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
     private Long id;
     private LocalDate date;
+    @Column(name="home_team")
     private String homeTeam;
+    @Column(name="away_team")
     private String awayTeam;
+    @Column(name="home_score")
     private String homeScore;
+    @Column(name="away_score")
     private String awayScore;
+    @Column(name="tournament")
     private String tournament;
+    @Column(name="city")
     private String city;
+    @Column(name="country")
     private String country;
+    @Column(name="neutral")
     private String neutral;
+    @Column(name="winner")
+    private String winner;
 
     public FootBallMatch() {
     }
 
-    public FootBallMatch(LocalDate date, String homeTeam, String awayTeam, String homeScore,
-                         String awayScore, String tournament) {
-        this.date = date;
+    public FootBallMatch(Long id, String homeTeam, String awayTeam, String homeScore, String awayScore, String tournament, String city, String country, String neutral, String winner, LocalDate date) {
+        this.id = id;
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeScore = homeScore;
         this.awayScore = awayScore;
         this.tournament = tournament;
+        this.city = city;
+        this.country = country;
+        this.neutral = neutral;
+        this.winner = winner;
+        this.date = date;
     }
 
     public Long getId() {
@@ -110,5 +125,13 @@ public class FootBallMatch {
 
     public void setNeutral(String neutral) {
         this.neutral = neutral;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 }

@@ -34,14 +34,15 @@ public class BatchConfiguration {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    @Value("classPath:/results.csv")
+    @Value("classPath:/results1.csv")
     private Resource inputResource;
 
     @Bean
-    public Job readCSVFileJob(Step step) {
+    public Job readCSVFileJob(JobCompletionNotificationListener listener, Step step) {
         return jobBuilderFactory
                 .get("readCSVFileJob")
                 .incrementer(new RunIdIncrementer())
+                .listener(listener)
                 .start(step)
                 .build();
     }
@@ -50,7 +51,7 @@ public class BatchConfiguration {
     public Step step(JdbcBatchItemWriter<FootBallMatch> writer) {
         return stepBuilderFactory
                 .get("step")
-                .<FootballMatchData, FootBallMatch>chunk(10)
+                .<FootballMatchData, FootBallMatch>chunk(50)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer)
@@ -75,7 +76,7 @@ public class BatchConfiguration {
     public LineMapper<FootballMatchData> lineMapper() {
         DefaultLineMapper<FootballMatchData> lineMapper = new DefaultLineMapper<FootballMatchData>();
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
-        lineTokenizer.setNames("date","home_team","away_team","home_score","away_score","tournament","city","country","neutral");
+        lineTokenizer.setNames("home_team","away_team","home_score","away_score","tournament","city","country","neutral", "winner", "date");
 
         BeanWrapperFieldSetMapper<FootballMatchData> fieldSetMapper = new BeanWrapperFieldSetMapper<FootballMatchData>();
         fieldSetMapper.setTargetType(FootballMatchData.class);
@@ -88,8 +89,8 @@ public class BatchConfiguration {
     public JdbcBatchItemWriter<FootBallMatch> writer(DataSource dataSource) {
         JdbcBatchItemWriter<FootBallMatch> itemWriter = new JdbcBatchItemWriter<FootBallMatch>();
         itemWriter.setDataSource(dataSource);
-        itemWriter.setSql("INSERT INTO foot_ball_match (date,home_team,away_team,home_score,away_score,tournament,city,country,neutral) "
-                + " VALUES (:date,:homeTeam,:awayTeam,:homeScore,:awayScore,:tournament,:city,:country,:neutral)");
+        itemWriter.setSql("INSERT INTO foot_ball_match (home_team,away_team,home_score,away_score,tournament,city,country,neutral, winner, date) "
+                + " VALUES (:homeTeam,:awayTeam,:homeScore,:awayScore,:tournament,:city,:country,:neutral, :winner, :date)");
         itemWriter.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<FootBallMatch>());
         return itemWriter;
     }

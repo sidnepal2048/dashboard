@@ -21,6 +21,7 @@ public class FootBallMatchProcessor implements ItemProcessor<FootballMatchData, 
         footBallMatch.setCity(footballMatchData.getCity());
         footBallMatch.setCountry(footballMatchData.getCountry());
         footBallMatch.setNeutral(footballMatchData.getNeutral());
+        footBallMatch.setWinner(footballMatchData.getWinner());
 
         return footBallMatch;
     }

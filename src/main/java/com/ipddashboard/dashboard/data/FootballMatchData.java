@@ -10,6 +10,7 @@ public class FootballMatchData {
     private String city;
     private String country;
     private String neutral;
+    private String winner;
 
     public String getDate() {
         return date;
@@ -81,5 +82,13 @@ public class FootballMatchData {
 
     public void setNeutral(String neutral) {
         this.neutral = neutral;
+    }
+
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
     }
 }
